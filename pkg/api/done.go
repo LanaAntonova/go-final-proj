@@ -8,6 +8,12 @@ import (
 )
 
 func doneTaskHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		//w.WriteHeader(http.StatusMethodNotAllowed)
+		WriteJSON(w, map[string]string{"error": "Method not allowed"})
+		return
+	}
+
 	id := r.URL.Query().Get("id")
 	if id == "" {
 		WriteJSON(w, map[string]string{"error": "Task ID is not specified"})

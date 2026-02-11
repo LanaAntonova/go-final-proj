@@ -9,9 +9,7 @@ import (
 	"strconv"
 	"strings"
 	"testing"
-	"time"
 
-	"github.com/LanaAntonova/go-final-proj/pkg/server"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -58,17 +56,6 @@ func walkDir(path string, f func(fname string) error) error {
 }
 
 func TestApp(t *testing.T) {
-	// Запуск сервера и таймап
-	done := make(chan error, 1)
-	go func() {
-		err := server.Start()
-		if err != nil && err != http.ErrServerClosed {
-			done <- err
-		}
-	}()
-	time.Sleep(100 * time.Millisecond)
-	//
-
 	cmp := func(fname string) error {
 		fbody, err := os.ReadFile(fname)
 		if err != nil {

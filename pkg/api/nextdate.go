@@ -2,6 +2,7 @@ package api
 
 import (
 	"errors"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -174,6 +175,11 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 }
 
 func nextDayHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
 	nowParam := r.FormValue("now")
 	dateParam := r.FormValue("date")
 	repeatParam := r.FormValue("repeat")
@@ -196,8 +202,14 @@ func nextDayHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	if nextDate == "" {
-		w.Write([]byte(""))
+		_, err = w.Write([]byte(""))
+		if err != nil {
+			log.Panicf("Failed to write response body: %v", err)
+		}
 	} else {
-		w.Write([]byte(nextDate))
+		_, err = w.Write([]byte(nextDate))
+		if err != nil {
+			log.Panicf("Failed to write response body: %v", err)
+		}
 	}
 }

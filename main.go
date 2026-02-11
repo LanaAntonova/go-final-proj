@@ -19,7 +19,13 @@ func main() {
 		log.Fatal(err)
 	}
 
-	log.Println("Сервер запущен")
+	defer func() {
+		if err := db.Close(); err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	log.Printf("Server is running on port %04d", server.Port)
 	if err := server.Start(); err != nil {
 		log.Fatal(err)
 	}
